@@ -28,4 +28,10 @@ class LoginController extends Controller
             'password' => 'required|string'
         ]);
     }
+
+    public function logout(Request $request){
+        Auth::logout();
+        $request->session()->invalidate();
+        return redirect('/');
+    }
 }
