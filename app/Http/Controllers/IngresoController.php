@@ -12,7 +12,7 @@ class IngresoController extends Controller
 {
     public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        //if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
@@ -25,11 +25,11 @@ class IngresoController extends Controller
             ->orderBy('ingresos.id', 'desc')->paginate(3);
         }
         else{
-            $personas = Ingreso::join('personas', 'ingresos.idproveedor', '=', 'personas.id')
+            $ingresos = Ingreso::join('personas', 'ingresos.idproveedor', '=', 'personas.id')
             ->join('users', 'ingresos.idusuario', '=', 'users.id')
             ->select('ingresos.id', 'ingresos.tipo_comprobante', 'ingresos.serie_comprobante', 'ingresos.num_comprobante','ingresos.fecha_hora', 'ingresos.impuesto',
             'ingresos.total', 'ingresos.estado', 'personas.nombre', 'users.usuario')   
-            ->whre('ingresos.'.$criterio, 'like', '%'. $buscar. '%')->orderBy('ingresos.id', 'desc')->paginate(3);
+            ->where('ingresos.'.$criterio, 'like', '%'. $buscar. '%')->orderBy('ingresos.id', 'desc')->paginate(3);
         }
         return[
             'pagination' => [
