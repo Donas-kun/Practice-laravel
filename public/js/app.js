@@ -43751,14 +43751,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             me.pagination.current_page = page;
             me.listarIngreso(page, buscar, criterio);
         },
+        encuentra: function encuentra(id) {
+            var sw = false;
+            for (var i = 0; i < this.arrayDetalle.length; i++) {
+                if (id == this.arrayDetalle[i].idarticulo) {
+                    sw = true;
+                }
+            }
+            return sw;
+        },
         agregarDetalle: function agregarDetalle() {
             var me = this;
-            me.arrayDetalle.push({
-                idarticulo: me.idarticulo,
-                articulo: me.articulo,
-                cantidad: me.cantidad,
-                precio: me.precio
-            });
+            if (me.idarticulo == 0 || me.cantidad == 0 || me.precio == 0) {} else {
+                if (me.encuentra(me.idarticulo)) {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Error...',
+                        text: 'Ese articulo ya se encuentra agregado!'
+                    });
+                } else {
+                    me.arrayDetalle.push({
+                        idarticulo: me.idarticulo,
+                        articulo: me.articulo,
+                        cantidad: me.cantidad,
+                        precio: me.precio
+                    });
+                    me.codigo = "";
+                    me.idarticulo = 0;
+                    me.articulo = "";
+                    me.cantidad = 0;
+                    me.precio = 0;
+                }
+            }
         },
         registrarIngreso: function registrarIngreso() {
             if (this.validarIngreso()) {
@@ -44473,7 +44497,24 @@ var render = function() {
                   _c("div", { staticClass: "form-group row border" }, [
                     _c("div", { staticClass: "col-md-6" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Artículo")]),
+                        _c("label", [
+                          _vm._v("Artículo "),
+                          _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.idarticulo == 0,
+                                  expression: "idarticulo == 0"
+                                }
+                              ],
+                              staticStyle: { color: "red" }
+                            },
+                            [_vm._v("(*seleccione)")]
+                          )
+                        ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "form-inline" }, [
                           _c("input", {
@@ -44546,7 +44587,24 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-2" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Precio")]),
+                        _c("label", [
+                          _vm._v("Precio "),
+                          _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.precio == 0,
+                                  expression: "precio == 0"
+                                }
+                              ],
+                              staticStyle: { color: "red" }
+                            },
+                            [_vm._v("(*ingrese precio)")]
+                          )
+                        ]),
                         _vm._v(" "),
                         _c("input", {
                           directives: [
@@ -44574,7 +44632,24 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-2" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Cantidad")]),
+                        _c("label", [
+                          _vm._v("Cantidad "),
+                          _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.cantidad == 0,
+                                  expression: "cantidad == 0"
+                                }
+                              ],
+                              staticStyle: { color: "red" }
+                            },
+                            [_vm._v("(*ingrese cantidad)")]
+                          )
+                        ]),
                         _vm._v(" "),
                         _c("input", {
                           directives: [
