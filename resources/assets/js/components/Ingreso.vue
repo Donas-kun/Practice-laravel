@@ -94,9 +94,14 @@
                         <div class="col-md-9">
                             <div class="form-group">
                                 <label for="">Proveedor(*)</label>
-                                <select class="form-control">
+                                <v-select 
+                                :on-search="selectProveedor" 
+                                label="nombre"
+                                :options="arrayProveedor" 
+                                placeholder="Buscar Proveedores..." 
+                                :onChange="getDatosProveedor">
 
-                                </select>
+                                </v-select>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -132,8 +137,9 @@
                             <div class="form-group">
                                 <label>Artículo</label>
                                 <div class="form-inline">
-                                    <input type="text" class="form-control" v-model="idarticulo" placeholder="Ingrese articulo">
+                                    <input type="text" class="form-control" v-model="codigo" @keyup.enter="buscarArticulo()" placeholder="Ingrese articulo">
                                     <button class="btn btn-primary">...</button>
+                                    <input type="text" readonly class="form-control" v-model="articulo">
                                 </div>
                             </div>
                         </div>
@@ -258,11 +264,12 @@
 </template>
 
 <script>
+    import vSelect from 'vue-select';
     export default {
         data() {
             return {
                 ingreso_id: 0,
-                iproveedor: 0,
+                idproveedor: 0,
                 nombre : '',
                 tipo_comprobante: 'BOLETA',
                 serie_comprobante: '',
@@ -271,6 +278,7 @@
                 total: 0.0,
                 arrayIngreso: [],
                 arrayDetalle: [],
+                arrayProveedor: [],
                 listado: 1,
                 modal : 0,
                 tituloModal : '',
@@ -287,8 +295,17 @@
                 },
                 offset : 3,
                 criterio : 'num_comprobante',
-                buscar : ''
+                buscar : '',
+                arrayArticulo: [],
+                idarticulo: 0,
+                codigo: '',
+                articulo: '',
+                precio: 0,
+                cantidad: 0
             }
+        },
+        components:{
+            vSelect
         },
         computed: {
             isActived: function(){
@@ -331,13 +348,39 @@
                     console.log(error);
                 });
             },
-            selectRol(){
+            selectProveedor(search, loading){
                 let me=this;
-                var url = '/rol/selectRol';
+                loading(true)
+                var url = '/proveedor/selectProveedor?filtro='+search;
                 axios.get(url).then(function (response) {
+                    let respuesta = response.data;
+                    q: search
+                    me.arrayProveedor = respuesta.proveedores;
+                    loading(false)
+                })
+                .catch(function (error){
+                    console.log(error);
+                });
+            },
+            getDatosProveedor(val1){
+                let me = this;
+                me.loading = true;
+                me.idproveedor = val1.id;
+            },
+            buscarArticulo(){
+                let me = this;
+                var url = '/articulo/buscarArticulo?filtro=' + me.codigo;
+                axios.get(url).then(function (response){
                     var respuesta = response.data;
-                    me.arrayRol = respuesta.roles;
-                    
+                    me.arrayArticulo = respuesta.articulos;
+                    if (me.arrayArticulo.length > 0) {
+                        me.articulo = me.arrayArticulo[0]['nombre'];
+                        me.idarticulo = me.arrayArticulo[0]['id'];
+                    }
+                    else{
+                        me.articulo = 'No existe artículo';
+                        me.idarticulo = 0;
+                    }
                 })
                 .catch(function (error){
                     console.log(error);
