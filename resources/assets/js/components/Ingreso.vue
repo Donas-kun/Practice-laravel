@@ -189,15 +189,15 @@
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
                                         <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
-                                        <td>$ 5</td>
+                                        <td>$ {{total_parcial = (total - total_impuesto).toFixed(2)}}</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
                                         <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
-                                        <td>$ 1</td>
+                                        <td>$ {{total_impuesto = ((total * impuesto)/(1 + impuesto)).toFixed(2)}}</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
                                         <td colspan="4" align="right"><strong>Total Neto:</strong></td>
-                                        <td>$ 6</td>
+                                        <td>$ {{total = calcularTotal}}</td>
                                     </tr>
                                 </tbody>
                                 <tbody v-else>
@@ -262,6 +262,8 @@
                 num_comprobante: '',
                 impuesto: 0.18,
                 total: 0.0,
+                total_impuesto: 0.0,
+                total_parcial: 0.0,
                 arrayIngreso: [],
                 arrayDetalle: [],
                 arrayProveedor: [],
@@ -319,6 +321,13 @@
                     from++;
                 }
                 return pagesArray;
+            },
+            calcularTotal: function(){
+                var resultado = 0.0;
+                for (var i = 0; i < this.arrayDetalle.length; i++) {
+                    resultado = resultado + (this.arrayDetalle[i].precio* this.arrayDetalle[i].cantidad);
+                }
+                return resultado;
             }
         },
         methods: {
