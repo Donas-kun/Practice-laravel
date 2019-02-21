@@ -478,7 +478,22 @@
                 }
             },
             agregarDetalleModal(data = []){
-                
+                let me = this;
+                if (me.encuentra(data['id'])) {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Error...',
+                        text: 'Ese articulo ya se encuentra agregado!',
+                    });
+                }
+                else{
+                    me.arrayDetalle.push({
+                        idarticulo: data['id'],
+                        articulo: data['nombre'],
+                        cantidad: 1,
+                        precio: 1
+                    });
+                }
             },
             listarArticulo (buscar, criterio){
                 let me=this;
@@ -536,7 +551,8 @@
                 this.modal = 0;
                 this.tituloModal = '';
             },
-            abrirModal(modelo, accion, data = []){
+            abrirModal(){
+                this.arrayArticulo = [];
                 this.modal = 1;
                 this.tituloModal = 'Seleccione uno o varios articulos';
             },

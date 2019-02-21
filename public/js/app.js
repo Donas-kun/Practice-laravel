@@ -43850,6 +43850,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         agregarDetalleModal: function agregarDetalleModal() {
             var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+            var me = this;
+            if (me.encuentra(data['id'])) {
+                Swal.fire({
+                    type: 'error',
+                    title: 'Error...',
+                    text: 'Ese articulo ya se encuentra agregado!'
+                });
+            } else {
+                me.arrayDetalle.push({
+                    idarticulo: data['id'],
+                    articulo: data['nombre'],
+                    cantidad: 1,
+                    precio: 1
+                });
+            }
         },
         listarArticulo: function listarArticulo(buscar, criterio) {
             var me = this;
@@ -43906,9 +43922,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.modal = 0;
             this.tituloModal = '';
         },
-        abrirModal: function abrirModal(modelo, accion) {
-            var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-
+        abrirModal: function abrirModal() {
+            this.arrayArticulo = [];
             this.modal = 1;
             this.tituloModal = 'Seleccione uno o varios articulos';
         },
